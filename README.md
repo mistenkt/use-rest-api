@@ -64,15 +64,15 @@ A customizable REST Api and data manager hook for your React application
    export default UserIndex;
    ````
    
-3. To send create/update request to the api use the `useProduce` hook.
+3. To send create/update request to the api use the `useProducer` hook.
 
     ````jsx harmony
    import React from 'react';
-   import {useApi, useProduce} from '@mistenkt/use-rest-api';
+   import {useApi, useProducer} from '@mistenkt/use-rest-api';
    
    const UserIndex = () => {
        const [users, loading] = useApi('users.list');
-       const [produce, produceLoading, validationErrors] = useProduce({
+       const [produce, produceLoading, validationErrors] = useProducer({
            onSuccess: data => console.log('Success callback', data),
            onFail: err => console.log('Fail callback', data),
            onValidationError: errors => console.log('Validation error callback', errors)
