@@ -1,11 +1,8 @@
-# kb-useApi
+# use-rest-api
 A customizable REST Api and data manager hook for your React application
 
-## Why ?
-There's a lot of boilerplating involved with getting your new project up and running. The data flow from api to your internal store is one of the most time-consuming parts. 
-
 ## Installation
-`yarn add kb-useApi`
+`yarn add @mistenkt/use-rest-api`
 
 ## Usage
 
@@ -13,7 +10,7 @@ There's a lot of boilerplating involved with getting your new project up and run
 
     ````jsx harmony
    import React from 'react';
-   import {ApiProvider} from 'kb-useApi';
+   import {ApiProvider} from '@mistenkt/use-rest-api';
    
    const apiResources = {
        users: {
@@ -42,7 +39,7 @@ There's a lot of boilerplating involved with getting your new project up and run
 
     ````jsx harmony
    import React from 'react';
-   import useApi from 'kb-useApi';
+   import {useApi} from '@mistenkt/use-rest-api';
    
    const UserIndex = () => {
        const [users, loading] = useApi('users.list');
@@ -67,16 +64,18 @@ There's a lot of boilerplating involved with getting your new project up and run
    export default UserIndex;
    ````
    
-3. Producing content is very similar.
+3. To send create/update request to the api use the `useProduce` hook.
 
     ````jsx harmony
    import React from 'react';
-   import useApi from 'kb-useApi';
+   import {useApi, useProduce} from '@mistenkt/use-rest-api';
    
    const UserIndex = () => {
-       const [users, loading, produce] = useApi('users.list', {
-           onProduced: result => console.log('on produced callback'),
-           onProducedFailed: error => console.log('on failed callback')  
+       const [users, loading] = useApi('users.list');
+       const [produce, produceLoading, validationErrors] = useProduce({
+           onSuccess: data => console.log('Success callback', data),
+           onFail: err => console.log('Fail callback', data),
+           onValidationError: errors => console.log('Validation error callback', errors)
        });
    
        const createUser = () => {
@@ -108,47 +107,14 @@ There's a lot of boilerplating involved with getting your new project up and run
    export default UserIndex;
    ````
    
-   #API
-   
-   ### `<ApiProvider/>`
-   
-   Provider wrapper for you application. Set it at top level.
-   
-   #### Required Params:
-    - `resources` (object) - The resources you wish to interact with
-    
-   #### Optional Params:
-    - `defaultActions` (object) - Overwrite some or all of the default actions provided by the library.
-    
-        ```jsx harmony
-        // These are the default actions of the library
-      
-        const defaultActions = {
-            list: {
-                method: 'GET',
-                endpoint: '/:endpoint',
-                getState: (state, resource) => state[resource] || [],
-            },
-            single: {
-                method: 'GET',
-                endpoint: '/:endpoint/:id',
-                getState: (state, resource, id) =>
-                    Array.isArray(state[resource])
-                        ? state[resource].find((a) => a.id === id)
-                        : null,
-            },
-            create: {
-                method: 'POST',
-                endpoint: '/:endpoint',
-            },
-            update: {
-                method: 'POST',
-                endpoint: '/:endpoint',
-            },
-            delete: {
-                method: 'GET',
-                endpoint: '/:endpoint/:id/delete',
-            },
-        };
-        ```
-   
+## Api Documentation
+
+Ful api documentation coming soon.
+
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
