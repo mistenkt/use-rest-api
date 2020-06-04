@@ -1,0 +1,43 @@
+{
+  "name": "@mistenkt/use-rest-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "mistenkt",
+  "license": "MIT",
+  "homepage": "https://github.com/mistenkt/use-rest-api",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.2",
+    "@babel/plugin-transform-modules-commonjs": "^7.10.1",
+    "@babel/preset-env": "^7.10.2",
+    "@babel/preset-react": "^7.10.1",
+    "@testing-library/react-hooks": "^3.2.1",
+    "babel-jest": "^26.0.1",
+    "husky": "^4.2.5",
+    "jest": "^26.0.1",
+    "jest-serial-runner": "^1.1.0",
+    "lint-staged": "^10.2.7",
+    "prettier": "^2.0.5",
+    "react": "^16.13.1",
+    "react-test-renderer": "^16.13.1"
+  },
+  "scripts": {
+    "pretty": "prettier --write \"src/**/*.js\" \"__tests__/**/*.js\"",
+    "test": "jest"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "npm run pretty"
+    ]
+  },
+  "peerDependencies": {
+    "react": "*"
+  }
+}
