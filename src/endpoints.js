@@ -16,18 +16,19 @@ export const deleteUpdateAction = (resource, data) => ({
     },
 });
 
+export const getResourceState = (state, resource) => state[resource] || [];
+
+export const getSingleResourceState = (state, resource, id) =>
+    Array.isArray(state[resource])
+        ? state[resource].find((a) => a.id == id)
+        : null;
+
 export const defaultActionSpecs = {
     method: 'GET',
     endpoint: '/:endpoint',
     getState: getResourceState,
     getUpdateAction: basicUpdateAction,
 };
-
-export const getResourceState = (state, resource) => state[resource] || [];
-export const getSingleResourceState = (state, resource, id) =>
-    Array.isArray(state[resource])
-        ? state[resource].find((a) => a.id == id)
-        : null;
 
 export const _defaultActions = {
     list: {
