@@ -16,20 +16,30 @@ export const deleteUpdateAction = (resource, data) => ({
     },
 });
 
+export const defaultActionSpecs = {
+    method: 'GET',
+    endpoint: '/:endpoint',
+    getState: getResourceState,
+    getUpdateAction: basicUpdateAction,
+};
+
+export const getResourceState = (state, resource) => state[resource] || [];
+export const getSingleResourceState = (state, resource, id) =>
+    Array.isArray(state[resource])
+        ? state[resource].find((a) => a.id == id)
+        : null;
+
 export const _defaultActions = {
     list: {
         method: 'GET',
         endpoint: '/:endpoint',
-        getState: (state, resource) => state[resource] || [],
+        getState: getResourceState,
         getUpdateAction: basicUpdateAction,
     },
     single: {
         method: 'GET',
         endpoint: '/:endpoint/:id',
-        getState: (state, resource, id) =>
-            Array.isArray(state[resource])
-                ? state[resource].find((a) => a.id == id)
-                : null,
+        getState: getSingleResourceState,
         getUpdateAction: basicUpdateAction,
     },
     create: {
@@ -49,20 +59,47 @@ export const _defaultActions = {
     },
 };
 
+const getDefaultActions = (defaultActions) => {
+    if (!defaultActions) return _defaultActions;
+
+    let newDefaults = { ..._defaultActions };
+
+    for (let [key, spec] of Object.entries(defaultActions)) {
+        const actionSpecs = spec || {};
+        newDefaults[key] = {
+            ...defaultActionSpecs,
+            ...actionSpecs,
+        };
+    }
+
+    return newDefaults;
+};
+
 export const createEndpoints = (resources = {}, defaultActions) => {
     let apiResources = {};
 
-    const defaults = defaultActions
-        ? { ..._defaultActions, ...defaultActions }
-        : _defaultActions;
+    const defaults = getDefaultActions(defaultActions);
 
     for (let [key, resource] of Object.entries(resources)) {
+        const resourceActions = {
+            ...defaults,
+        };
+
+        if (resource.actions) {
+            for (let [actionKey, actionSpecs] of Object.entries(
+                resource.actions
+            )) {
+                const _actionSpecs = actionSpecs || {};
+                resourceActions[actionKey] = {
+                    ...defaultActionSpecs,
+                    ..._actionSpecs,
+                };
+            }
+        }
+
         apiResources[key] = {
             ...resource,
-            actions: {
-                ...defaults,
-                ...resource.actions,
-            },
+            actions: resourceActions,
         };
     }
 

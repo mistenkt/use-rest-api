@@ -2,6 +2,7 @@ import {
     createEndpoints,
     parseEndpoint,
     _defaultActions,
+    defaultActionSpecs,
 } from '../src/endpoints';
 
 describe('Test endpoint creator', () => {
@@ -57,7 +58,7 @@ describe('Test endpoint creator', () => {
     test('It works with overwritten default actions', () => {
         const customDefaults = {
             list: {
-                foo: 'bar',
+                endpoint: '/foolist',
             },
         };
 
@@ -66,15 +67,20 @@ describe('Test endpoint creator', () => {
                 foo: {
                     endpoint: 'foo',
                     actions: {
-                        bar: 'bar',
+                        bar: {
+                            endpoint: '/barbaz',
+                        },
                     },
                 },
             },
             customDefaults
         );
 
-        expect(generated.foo.actions.list).toMatchObject(customDefaults.list);
-        expect(generated.foo.actions.bar).toBe('bar');
+        expect(generated.foo.actions.list).toMatchObject({
+            ...defaultActionSpecs,
+            ...customDefaults.list,
+        });
+        expect(generated.foo.actions.bar.endpoint).toBe('/barbaz');
         expect(generated.foo.actions).toEqual(
             expect.objectContaining({
                 single: expect.any(Object),
