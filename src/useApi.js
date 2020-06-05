@@ -2,9 +2,11 @@ import React, { useEffect, useContext, useState, useCallback } from 'react';
 import { store, options, apiResources, getToken } from './store';
 import request from './request';
 import { parseEndpoint } from './endpoints';
+import { batch } from 'react-redux';
 
 const useApi = (type) => {
     const { dispatch, state } = useContext(store);
+
     const [loading, setLoading] = useState(false);
     const [resource, action, id] = type.split('.');
     const selectedAction = apiResources[resource].actions[action];
@@ -34,16 +36,18 @@ const useApi = (type) => {
             if (typeof selectedAction.alwaysReset === 'boolean')
                 shouldReset = selectedAction.alwaysReset;
 
-            if (shouldReset) {
-                dispatch({
-                    type: 'resource/reset',
-                    payload: { resource },
-                });
-            }
+            batch(() => {
+                if (shouldReset) {
+                    dispatch({
+                        type: 'resource/reset',
+                        payload: { resource },
+                    });
+                }
 
-            dispatch(selectedAction.getUpdateAction(resource, result));
+                dispatch(selectedAction.getUpdateAction(resource, result));
 
-            setLoading(false);
+                setLoading(false);
+            });
         } catch (e) {
             setLoading(false);
         }
