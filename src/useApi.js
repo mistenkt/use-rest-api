@@ -4,7 +4,7 @@ import request from './request';
 import { parseEndpoint } from './endpoints';
 import { batch } from 'react-redux';
 
-const useApi = (type) => {
+const useApi = (type, opt = {}) => {
     const { dispatch, state } = useContext(store);
 
     const [loading, setLoading] = useState(false);
@@ -21,7 +21,8 @@ const useApi = (type) => {
             parseEndpoint(
                 apiResources[resource].endpoint,
                 selectedAction.endpoint,
-                id
+                id,
+                opt.params
             );
 
         try {

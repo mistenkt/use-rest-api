@@ -1,4 +1,4 @@
-import { toQueryString } from './utils';
+import { isObject, toQueryString } from './utils';
 
 export const basicUpdateAction = (resource, data) => ({
     type: 'resource/update',
@@ -114,7 +114,7 @@ export const parseEndpoint = (resourceEndpoint, methodEndpoint, id, params) => {
         parsedEndpoint = parsedEndpoint.replace(
             ':params',
             params
-                ? typeof params === 'object'
+                ? typeof isObject(params)
                     ? toQueryString(params)
                     : params
                 : ''
