@@ -13,7 +13,7 @@ const useApi = (type, opt = {}) => {
 
     const data = selectedAction.getState(state, resource, id);
 
-    const update = async () => {
+    const update = async (updateOptions = {}) => {
         setLoading(true);
 
         const actionEndpoint =
@@ -22,7 +22,7 @@ const useApi = (type, opt = {}) => {
                 apiResources[resource].endpoint,
                 selectedAction.endpoint,
                 id,
-                opt.params
+                updateOptions.params || opt.params
             );
 
         try {
