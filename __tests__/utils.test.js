@@ -14,6 +14,7 @@ describe('Test utils', () => {
             foo: 'bar',
             baz: ['foo', 'bar'],
             bar: 'baz',
+            undef: undefined,
         });
 
         expect(parsedAlternative).toBe('?foo=bar&baz[]=foo&baz[]=bar&bar=baz');
