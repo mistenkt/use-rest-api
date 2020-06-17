@@ -84,4 +84,19 @@ describe('Testing useApi hook', () => {
 
         expect(result.current[0]).toEqual([{ id: 1 }, { id: 2 }]);
     });
+
+    test('Does not automatically trigger fetch request if manual options is provided', async () => {
+        const { result, waitForNextUpdate } = renderHook(
+            () => useApi('foo.list', { manual: true }),
+            { wrapper }
+        );
+
+        const [initialData, loading, update] = result.current;
+
+        expect(initialData).toEqual([]);
+
+        await act(() => update());
+
+        expect(result.current[0]).toEqual([{ id: 1 }, { id: 2 }]);
+    });
 });

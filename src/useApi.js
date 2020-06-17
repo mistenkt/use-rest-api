@@ -6,7 +6,6 @@ import { batch } from 'react-redux';
 
 const useApi = (type, opt = {}) => {
     const { dispatch, state } = useContext(store);
-
     const [loading, setLoading] = useState(false);
     const [resource, action, id] = type.split('.');
     const selectedAction = apiResources[resource].actions[action];
@@ -55,7 +54,8 @@ const useApi = (type, opt = {}) => {
     };
 
     useEffect(() => {
-        if (!data || (Array.isArray(data) && !data.length)) update();
+        if (!opt.manual && (!data || (Array.isArray(data) && !data.length)))
+            update();
     }, [type]);
 
     return [data, loading, update];
