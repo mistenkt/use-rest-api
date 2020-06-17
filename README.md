@@ -42,7 +42,7 @@ A customizable REST Api and data manager hook for your React application
    import {useApi} from '@mistenkt/use-rest-api';
    
    const UserIndex = () => {
-       const [users, loading] = useApi('users.list');
+       const [users, loading, update, reset] = useApi('users.list');
        
        if(loading) return (
            <div>Loading...</div>

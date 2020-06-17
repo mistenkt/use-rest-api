@@ -53,12 +53,19 @@ const useApi = (type, opt = {}) => {
         }
     };
 
+    const reset = () => {
+        dispatch({
+            type: 'resource/reset',
+            payload: { resource },
+        });
+    };
+
     useEffect(() => {
         if (!opt.manual && (!data || (Array.isArray(data) && !data.length)))
             update();
     }, [type]);
 
-    return [data, loading, update];
+    return [data, loading, update, reset];
 };
 
 export default useApi;

@@ -99,4 +99,19 @@ describe('Testing useApi hook', () => {
 
         expect(result.current[0]).toEqual([{ id: 1 }, { id: 2 }]);
     });
+
+    test('Manual reset works', async () => {
+        const { result, waitForNextUpdate } = renderHook(
+            () => useApi('foo.list'),
+            { wrapper }
+        );
+
+        await waitForNextUpdate();
+
+        expect(result.current[0]).toEqual([{ id: 1 }, { id: 2 }]);
+
+        await act(() => result.current[3]());
+
+        expect(result.current[0]).toEqual([]);
+    });
 });
