@@ -5,8 +5,15 @@ import React from 'react';
 
 const mockJsonPromise = Promise.resolve([{ id: 1 }, { id: 2 }]);
 const mockFetchPromise = Promise.resolve({
+    status: 200,
     json: () => mockJsonPromise,
 });
+
+const mockFetchAuthFail = () =>
+    Promise.resolve({
+        json: () => Promise.resolve({}),
+        status: 401,
+    });
 
 const endpoints = {
     foo: {
@@ -110,8 +117,31 @@ describe('Testing useApi hook', () => {
 
         expect(result.current[0]).toEqual([{ id: 1 }, { id: 2 }]);
 
-        await act(() => result.current[3]());
+        act(() => result.current[3]());
 
         expect(result.current[0]).toEqual([]);
+    });
+
+    test('authRedirect works', async () => {
+        const authRedirect = jest.fn();
+        global.fetch = jest.fn().mockImplementation(() => mockFetchAuthFail());
+        const { result, waitForNextUpdate } = renderHook(
+            () => useApi('foo.list'),
+            {
+                wrapper: ({ children }) => (
+                    <ApiProvider
+                        resources={endpoints}
+                        baseUrl="http://localhost"
+                        authRedirect={authRedirect}
+                    >
+                        {children}
+                    </ApiProvider>
+                ),
+            }
+        );
+
+        await waitForNextUpdate();
+
+        expect(authRedirect).toHaveBeenCalled();
     });
 });

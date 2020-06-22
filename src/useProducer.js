@@ -64,6 +64,8 @@ const useProducer = ({ onSuccess, onFail, onValidationError } = {}) => {
                     setValidationErrors(err.data.errors);
                 });
                 onValidationError && onValidationError(err.data);
+            } else if (err.status === 401 && options.authRedirect) {
+                options.authRedirect();
             } else {
                 setLoading(false);
                 onFail && onFail(err);

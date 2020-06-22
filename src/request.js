@@ -12,7 +12,7 @@ const request = ({ endpoint, method, data, token }) =>
             .then(async (res) => {
                 const data = await res.json();
 
-                if (res.status === 422) reject({ status: res.status, data });
+                if (res.status !== 200) reject({ status: res.status, data });
 
                 resolve(data);
             })

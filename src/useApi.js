@@ -48,8 +48,13 @@ const useApi = (type, opt = {}) => {
 
                 setLoading(false);
             });
-        } catch (e) {
+        } catch (err) {
             setLoading(false);
+            if (err.status && err.status === 401 && options.authRedirect) {
+                options.authRedirect();
+            } else {
+                console.log('fetch failed', err);
+            }
         }
     };
 

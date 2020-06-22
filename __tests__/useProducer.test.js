@@ -24,6 +24,7 @@ const jsonValidationError = Promise.resolve({
 const mockFetchPromise = (response) =>
     Promise.resolve({
         json: () => response || jsonResponse,
+        status: 200,
     });
 
 const mockFetchValidationError = Promise.resolve({
