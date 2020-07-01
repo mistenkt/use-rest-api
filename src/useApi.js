@@ -20,7 +20,7 @@ const useApi = (type, opt = {}) => {
             parseEndpoint(
                 apiResources[resource].endpoint,
                 selectedAction.endpoint,
-                id,
+                updateOptions.id || id,
                 updateOptions.params || opt.params
             );
 

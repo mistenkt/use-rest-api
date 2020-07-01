@@ -144,4 +144,32 @@ describe('Testing useApi hook', () => {
 
         expect(authRedirect).toHaveBeenCalled();
     });
+
+    test('id supplied in update options overwrites id set in type', async () => {
+        const mockFetch = jest.fn().mockImplementation(() => mockFetchPromise);
+        global.fetch = mockFetch;
+
+        const { result, waitForNextUpdate } = renderHook(
+            () => useApi('foo.single.foo'),
+            {
+                wrapper,
+            }
+        );
+
+        await waitForNextUpdate();
+
+        expect(mockFetch).toHaveBeenCalledWith(
+            'http://localhost/foo/foo',
+            expect.anything()
+        );
+
+        const [data, loading, update] = result.current;
+
+        await act(() => update({ id: 'bar' }));
+
+        expect(mockFetch).toHaveBeenCalledWith(
+            'http://localhost/foo/bar',
+            expect.anything()
+        );
+    });
 });
